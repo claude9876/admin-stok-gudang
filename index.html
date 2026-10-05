@@ -12,63 +12,102 @@
 <meta name="apple-mobile-web-app-title" content="Admin Stok">
 <title>Admin Stok Gudang</title>
 <style>
-:root{--bg:#f5f6f2;--card:#fff;--ink:#16211c;--mut:#66726c;--line:#dfe3dc;--pri:#0b5d4f;--priS:#d9ece7;--bad:#b4350f;--badS:#fbe6dd;--warn:#8a5a00;--warnS:#fbf0d4}
+:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mut:#5f6d67;--line:#e0e5e2;--pri:#0b5d4f;--priS:#e1f0ec;--bad:#b4350f;--badS:#fcebe4;--warn:#9a5b00;--warnS:#fdf1da;--t:#0b5d4f;--tS:#e1f0ec;--sh:0 1px 2px rgba(16,32,26,.06),0 1px 3px rgba(16,32,26,.04)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
-body{font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
-#app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--ink);color:#fff}
-header small{display:block;opacity:.7;font-size:13px}
-.pill{border:0;border-radius:99px;padding:6px 14px;font:inherit;font-size:14px;background:rgba(255,255,255,.16);color:#fff}
+body{font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.ic{flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#app{height:100dvh;display:flex;flex-direction:column;background:var(--bg)}
+header{display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--ink);color:#fff}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;font-size:17px;line-height:1.2}
+.brand small{display:block;opacity:.7;font-size:12.5px;font-weight:400}
+.logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.pill{display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:500;background:rgba(255,255,255,.08);color:#fff;min-height:36px}
 main{flex:1;overflow-y:auto;overscroll-behavior-y:contain;padding:16px}
 nav{display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-nav button{position:relative;border:0;background:none;padding:10px 0 8px;font:inherit;font-size:12.5px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px}
-nav button span{font-size:20px}
-nav button.on{color:var(--pri);font-weight:600;box-shadow:inset 0 3px var(--pri)}
-nav i{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font:600 11px/18px system-ui;font-style:normal;text-align:center;padding:0 4px}
+nav button{border:0;background:none;padding:8px 0 7px;font:inherit;font-size:12px;font-weight:500;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:3px;min-height:58px}
+nav .pl{position:relative;width:52px;height:28px;border-radius:99px;display:grid;place-items:center}
+nav button.on{color:var(--pri);font-weight:650}nav button.on .pl{background:var(--priS)}
+nav i{position:absolute;top:-4px;right:2px;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font:600 11px/18px system-ui;font-style:normal;text-align:center;padding:0 5px;border:2px solid var(--card);box-sizing:content-box}
 nav i[hidden]{display:none}
-h2{margin:0 0 12px;font-size:20px}h3{margin:20px 0 8px;font-size:16px}
-input,select{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);margin-bottom:10px}
-label{display:block;font-size:14px;color:var(--mut);margin:4px 0 6px}
-button{font:inherit;cursor:pointer}
+h2{margin:0;font-size:20px;font-weight:650;letter-spacing:-.2px}
+h3{margin:22px 0 10px;font-size:15px;font-weight:650}
+.ph{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.chip{width:40px;height:40px;border-radius:12px;background:var(--tS);color:var(--t);display:grid;place-items:center;flex:none}
+.sub{color:var(--mut);font-size:13px}
+input,select{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);margin-bottom:10px;min-height:48px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid rgba(11,93,79,.3);outline-offset:1px;border-color:var(--pri)}
+label{display:block;font-size:14px;font-weight:500;color:var(--mut);margin:4px 0 6px}
+button{font:inherit;cursor:pointer}button:active{transform:scale(.98)}
+.sbox{position:relative}.sbox .ic{position:absolute;left:14px;top:14px;color:var(--mut);pointer-events:none}.sbox input{padding-left:44px}
 .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kpi div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
-.kpi b{display:block;font-size:28px;line-height:1.1}.kpi small{color:var(--mut)}
-.kpi .alert{background:var(--badS);border-color:var(--bad)}.kpi .alert b{color:var(--bad)}
-.bars{display:flex;gap:6px;align-items:flex-end;height:110px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 10px 8px}
+.kpi div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--sh)}
+.kpi .ci{width:32px;height:32px;border-radius:10px;background:var(--priS);color:var(--pri);display:grid;place-items:center;margin-bottom:10px}
+.kpi b{display:block;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}.kpi small{color:var(--mut);font-size:13px}
+.kpi .alert{background:var(--badS);border-color:#f0c9bb}.kpi .alert b{color:var(--bad)}.kpi .alert .ci{background:#fff;color:var(--bad)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:120px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px 8px;box-shadow:var(--sh)}
 .bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
 .bars p{display:flex;gap:2px;align-items:flex-end;margin:0;height:74px}
 .bars s{display:block;width:9px;border-radius:3px 3px 0 0;background:var(--pri);min-height:2px}.bars s.o{background:#d9a21b}
 .bars small{font-size:11px;color:var(--mut)}
-.leg{font-size:13px;color:var(--mut);margin:6px 2px}.leg b{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--pri);margin:0 4px 0 0}.leg b.o{background:#d9a21b;margin-left:10px}
-.q{padding:14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px}
-.q small{color:var(--mut);display:block}
-.q .eff{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--priS);font-weight:600}.q .eff.neg{background:var(--badS);color:var(--bad)}
-.q img{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin:6px 0;background:#e8ebe5}
+.leg{font-size:13px;color:var(--mut);margin:8px 2px}.leg b{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--pri);margin:0 5px 0 0}.leg b.o{background:#d9a21b;margin-left:12px}
+.q{padding:14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh)}
+.q small{color:var(--mut);display:block;font-size:13px}
+.qh{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+.qh .chip{width:34px;height:34px;border-radius:10px}
+.qh>div{flex:1;min-width:0}.qh b{display:block}
+.q .eff{display:flex;align-items:center;gap:8px;margin:10px 0;padding:9px 12px;border-radius:10px;background:var(--priS);color:var(--pri);font-weight:600;font-size:15px}
+.q .eff.neg{background:var(--badS);color:var(--bad)}
+.q img{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:8px 0;background:#e8ebe8}
 .row{display:flex;gap:8px}
-.ok,.no{flex:1;height:50px;border-radius:12px;font-weight:700;border:0}
+.ok,.no{flex:1;height:50px;border-radius:12px;font-weight:650;border:0;display:flex;align-items:center;justify-content:center;gap:6px}
 .ok{background:var(--pri);color:#fff}.ok:disabled{opacity:.4}.no{background:var(--badS);color:var(--bad)}
-.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--ink)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--line);color:var(--ink);vertical-align:middle}
 .tag.POSTED{background:var(--priS);color:var(--pri)}.tag.PENDING{background:var(--warnS);color:var(--warn)}.tag.REJECTED{background:var(--badS);color:var(--bad)}
-.item{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink)}
-.item small{display:block;color:var(--mut)}.item.off{opacity:.55}
-.stk{font-size:20px;font-weight:700;white-space:nowrap}.stk.low{color:var(--bad)}
-.save,.ghost{width:100%;height:52px;border-radius:12px;font-size:17px;font-weight:700;margin-top:6px;border:0}
-.save{background:var(--pri);color:#fff}.ghost{background:#fff;border:1px solid var(--line);font-weight:500}
-.fab{width:100%;height:50px;border:1px dashed var(--pri);background:var(--priS);color:var(--pri);border-radius:12px;font-weight:600;margin-bottom:12px}
-.chk{display:flex;gap:10px;align-items:center;color:var(--ink);font-size:16px;margin:0 0 12px}.chk input{width:22px;height:22px;margin:0}
-.sk{height:76px;margin-bottom:10px;border-radius:12px;background:linear-gradient(90deg,#e8ebe5 25%,#f3f5f0 50%,#e8ebe5 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink);box-shadow:var(--sh);font-weight:500}
+.item small{display:block;color:var(--mut);font-weight:400;font-size:13px}.item.off{opacity:.55}
+.stk{font-size:19px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}.stk.low{color:var(--bad)}
+.save,.ghost{width:100%;height:54px;border-radius:12px;font-size:17px;font-weight:650;margin-top:6px;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.save{background:var(--pri);color:#fff}.ghost{background:#fff;border:1px solid var(--line);font-weight:600;color:var(--ink)}
+.fab{width:100%;height:50px;border:1.5px dashed var(--pri);background:var(--priS);color:var(--pri);border-radius:12px;font-weight:650;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.chk{display:flex;gap:10px;align-items:center;color:var(--ink);font-size:16px;margin:0 0 12px}.chk input{width:22px;height:22px;margin:0;min-height:0;accent-color:var(--pri)}
+.sk{height:76px;margin-bottom:10px;border-radius:14px;background:linear-gradient(90deg,#e8ebe8 25%,#f4f6f4 50%,#e8ebe8 75%);background-size:200% 100%;animation:sh 1.2s infinite}
 @keyframes sh{to{background-position:-200% 0}}
-.login{margin:auto;width:min(360px,100%);padding:24px}
-.err{color:var(--bad)}
-.toast{position:fixed;left:16px;right:16px;bottom:84px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;z-index:30}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;display:flex;align-items:flex-end}
-.sheet{background:var(--bg);width:100%;max-height:88dvh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.login{margin:auto;width:min(380px,100%);padding:24px}
+.login .logo{width:56px;height:56px;border-radius:16px;background:var(--ink);color:#fff;margin-bottom:16px}
+.login h2{font-size:24px}.login .sub{margin:2px 0 20px;font-size:15px}
+.err{color:var(--bad);font-size:14px;min-height:22px;margin:0 0 8px}
+.toast{position:fixed;left:16px;right:16px;bottom:84px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.ov{position:fixed;inset:0;background:rgba(10,20,16,.55);z-index:20;display:flex;align-items:flex-end}
+.sheet{background:var(--bg);width:100%;max-height:88dvh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom))}
+.sheet h2{margin-bottom:12px}
 .note{color:var(--mut);font-size:14px;margin:0 0 12px}
-@media(prefers-reduced-motion:reduce){.sk{animation:none}}
+.empty{text-align:center;color:var(--mut);padding:32px 0}.empty .ic{opacity:.5;margin-bottom:6px}
+.t-MASUK{--t:#0b5d4f;--tS:#e1f0ec}.t-KELUAR{--t:#1d4f91;--tS:#e4edf9}.t-RETUR{--t:#9a5b00;--tS:#fdf1da}.t-OPNAME{--t:#5a3d91;--tS:#ece7f7}
+@media(prefers-reduced-motion:reduce){.sk{animation:none}button:active{transform:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-dash" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+<symbol id="i-appr" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-hist" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+<symbol id="i-in" viewBox="0 0 24 24"><path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></symbol>
+<symbol id="i-out" viewBox="0 0 24 24"><path d="m18 9-6-6-6 6"/><path d="M12 3v14"/><path d="M5 21h14"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5 5.5 5.5 0 0 1-5.5 5.5H11"/></symbol>
+<symbol id="i-clip" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+</defs></svg>
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
@@ -80,15 +119,18 @@ const sb = supabase.createClient(SB_URL, SB_KEY);
 const sbReg = supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:false, autoRefreshToken:false}});
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const TABS = [['dash','Ringkasan','📊'],['appr','Approval','✅'],['log','Riwayat','🕘'],['prod','Barang','📦'],['usr','Pengguna','👥']];
+const ic = (n, s = 22) => `<svg class="ic" width="${s}" height="${s}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const TABS = [['dash','Ringkasan','dash'],['appr','Approval','appr'],['log','Riwayat','hist'],['prod','Barang','package'],['usr','Pengguna','users']];
+const TI = {MASUK:'in', KELUAR:'out', RETUR:'undo', OPNAME:'clip'};
 const STAT = {PENDING:'Menunggu', POSTED:'Diterapkan', REJECTED:'Ditolak'};
 const S = {me:null, tab:'dash', pending:0, rows:[], names:{}, f:{type:'', status:'', q:''}, prods:[]};
 const SK = '<div class="sk"></div>'.repeat(4);
+const head = (i, t, s) => `<div class="ph"><span class="chip">${ic(i, 21)}</span><div><h2>${t}</h2>${s ? `<div class="sub">${s}</div>` : ''}</div></div>`;
 const fmt = s => new Date(s).toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
 const nice = m => /STOK_TIDAK_CUKUP/.test(m) ? 'Stok tidak cukup untuk menerapkan transaksi ini' : /TIDAK_PENDING/.test(m) ? 'Transaksi ini sudah diproses' : m;
 const one = x => [].concat(x || [])[0];
 let tt; const toast = m => { document.querySelectorAll('.toast').forEach(e => e.remove());
-  const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.append(d); clearTimeout(tt); tt = setTimeout(() => d.remove(), 3200); };
+  const d = document.createElement('div'); d.className = 'toast'; d.setAttribute('role','status'); d.textContent = m; document.body.append(d); clearTimeout(tt); tt = setTimeout(() => d.remove(), 3200); };
 const fail = e => { $('#main').innerHTML = `<p class="err">Gagal memuat: ${esc(e.message)}</p><button class="ghost" data-a="reload">Coba lagi</button>`; };
 
 // ---------- Ringkasan ----------
@@ -107,13 +149,13 @@ async function dash() {
   t.data.forEach(r => { const x = days.find(y => y.d.toDateString() === new Date(r.created_at).toDateString());
     if (x && r.type === 'MASUK') x.in += r.qty; if (x && r.type === 'KELUAR') x.out += r.qty; });
   const mx = Math.max(1, ...days.flatMap(x => [x.in, x.out]));
-  m.innerHTML = `<h2>Ringkasan</h2><div class="kpi">
-    <div><b>${total}</b><small>Total unit di gudang</small></div><div><b>${p.data.length}</b><small>SKU aktif</small></div>
-    <div class="${low.length ? 'alert' : ''}"><b>${low.length}</b><small>Stok menipis</small></div>
-    <div class="${S.pending ? 'alert' : ''}"><b>${S.pending}</b><small>Menunggu approval</small></div></div>
+  const k = (i, v, l, a) => `<div class="${a ? 'alert' : ''}"><span class="ci">${ic(i, 18)}</span><b>${v}</b><small>${l}</small></div>`;
+  m.innerHTML = head('dash', 'Ringkasan', 'Kondisi gudang saat ini') + `<div class="kpi">
+    ${k('package', total, 'Total unit di gudang')}${k('layers', p.data.length, 'SKU aktif')}
+    ${k('alert', low.length, 'Stok menipis', low.length)}${k('clock', S.pending, 'Menunggu approval', S.pending)}</div>
     <h3>7 hari terakhir (unit)</h3><div class="bars">${days.map(x => `<div><p><s style="height:${x.in / mx * 70}px"></s><s class="o" style="height:${x.out / mx * 70}px"></s></p><small>${x.d.toLocaleDateString('id-ID', {weekday:'short'})}</small></div>`).join('')}</div>
     <div class="leg"><b></b>Masuk<b class="o"></b>Keluar</div>
-    <h3>Perlu diisi ulang</h3>${low.length ? low.slice(0, 8).map(x => `<div class="item"><div>${esc(x.name)}<small>${esc(x.sku)} · batas ${x.min_stock}</small></div><div class="stk low">${x.ready_stock}</div></div>`).join('') : '<p class="note">Semua stok di atas batas minimum.</p>'}`;
+    <h3>Perlu diisi ulang</h3>${low.length ? low.slice(0, 8).map(x => `<div class="item"><div>${esc(x.name)}<small>${esc(x.sku)} · batas ${x.min_stock}</small></div><div class="stk low">${x.ready_stock}</div></div>`).join('') : `<div class="empty">${ic('check', 30)}<br>Semua stok di atas batas minimum.</div>`}`;
 }
 
 // ---------- Approval ----------
@@ -122,20 +164,21 @@ async function appr() {
   const {data, error} = await sb.from('transactions').select('*,products(name,sku,unit,ready_stock),profiles!transactions_user_id_fkey(name),returns(photo_path,reason,layak_jual)').eq('status', 'PENDING').order('created_at');
   if (error) return fail(error);
   S.pending = data.length; bar();
-  if (!data.length) { m.innerHTML = '<h2>Approval</h2><p class="note">Tidak ada retur atau opname yang menunggu.</p>'; return; }
+  const h = head('appr', 'Approval', data.length ? `${data.length} transaksi menunggu keputusan` : '');
+  if (!data.length) { m.innerHTML = h + `<div class="empty">${ic('check', 32)}<br>Tidak ada retur atau opname yang menunggu.</div>`; return; }
   const paths = [];
-  m.innerHTML = '<h2>Approval</h2>' + data.map(t => {
+  m.innerHTML = h + data.map(t => {
     const r = one(t.returns), pr = t.products, now = pr.ready_stock;
     const delta = t.type === 'RETUR' ? (r && r.layak_jual ? t.qty : 0) : t.counted_qty - t.system_qty, after = now + delta;
     if (r && r.photo_path) paths.push(r.photo_path);
     const det = t.type === 'RETUR'
       ? `${t.qty} ${esc(pr.unit)} · ${esc(r?.reason || '-')} · ${r?.layak_jual ? 'layak dijual kembali' : 'tidak layak jual (stok tidak bertambah)'}`
       : `Hitung fisik ${t.counted_qty}, stok sistem saat dihitung ${t.system_qty} (selisih ${t.counted_qty - t.system_qty >= 0 ? '+' : ''}${t.counted_qty - t.system_qty})`;
-    return `<div class="q"><b>${t.type} · ${esc(pr.name)}</b><small>${esc(pr.sku)} · ${esc(t.profiles?.name || 'Staf')} · ${fmt(t.created_at)}</small>
+    return `<div class="q t-${t.type}"><div class="qh"><span class="chip">${ic(TI[t.type], 18)}</span><div><b>${t.type} · ${esc(pr.name)}</b><small>${esc(pr.sku)} · ${esc(t.profiles?.name || 'Staf')} · ${fmt(t.created_at)}</small></div></div>
       <p style="margin:8px 0 0">${det}</p>${t.note ? `<small>Catatan: ${esc(t.note)}</small>` : ''}
       ${r && r.photo_path ? `<img data-p="${esc(r.photo_path)}" alt="Foto bukti retur">` : ''}
-      <div class="eff ${after < 0 ? 'neg' : ''}">Stok sekarang ${now} → ${after} ${esc(pr.unit)}</div>
-      <div class="row"><button class="no" data-a="no" data-id="${t.id}">Tolak</button><button class="ok" data-a="ok" data-id="${t.id}" ${after < 0 ? 'disabled' : ''}>Setujui</button></div></div>`;
+      <div class="eff ${after < 0 ? 'neg' : ''}">Stok ${now} ${ic('arrow', 16)} ${after} ${esc(pr.unit)}</div>
+      <div class="row"><button class="no" data-a="no" data-id="${t.id}">${ic('x', 20)} Tolak</button><button class="ok" data-a="ok" data-id="${t.id}" ${after < 0 ? 'disabled' : ''}>${ic('check', 20)} Setujui</button></div></div>`;
   }).join('');
   if (paths.length) { const {data: u} = await sb.storage.from('retur-photos').createSignedUrls(paths, 600);
     (u || []).forEach(x => { const i = document.querySelector(`img[data-p="${CSS.escape(x.path)}"]`); if (i && x.signedUrl) i.src = x.signedUrl; }); }
@@ -157,20 +200,20 @@ async function log() {
   if (t.error) return fail(t.error);
   S.rows = t.data; S.names = Object.fromEntries((p.data || []).map(x => [x.id, x.name]));
   const o = (v, a) => a.map(([k, l]) => `<option value="${k}" ${S.f[v] === k ? 'selected' : ''}>${l}</option>`).join('');
-  m.innerHTML = `<h2>Riwayat</h2><select id="lt">${o('type', [['', 'Semua jenis'], ['MASUK', 'Masuk'], ['KELUAR', 'Keluar'], ['RETUR', 'Retur'], ['OPNAME', 'Opname']])}</select>
-    <select id="ls">${o('status', [['', 'Semua status'], ['PENDING', 'Menunggu'], ['POSTED', 'Diterapkan'], ['REJECTED', 'Ditolak']])}</select>
-    <input id="lq" placeholder="Cari barang, SKU, atau staf" value="${esc(S.f.q)}"><div id="lg"></div>`;
+  m.innerHTML = head('hist', 'Riwayat', '200 transaksi terbaru') + `<div class="row"><select id="lt">${o('type', [['', 'Semua jenis'], ['MASUK', 'Masuk'], ['KELUAR', 'Keluar'], ['RETUR', 'Retur'], ['OPNAME', 'Opname']])}</select>
+    <select id="ls">${o('status', [['', 'Semua status'], ['PENDING', 'Menunggu'], ['POSTED', 'Diterapkan'], ['REJECTED', 'Ditolak']])}</select></div>
+    <div class="sbox">${ic('search', 20)}<input id="lq" type="search" placeholder="Cari barang, SKU, atau staf" value="${esc(S.f.q)}"></div><div id="lg"></div>`;
   logList();
 }
 function logList() {
   const q = S.f.q.toLowerCase();
   const r = S.rows.filter(x => (!S.f.type || x.type === S.f.type) && (!S.f.status || x.status === S.f.status)
     && (!q || `${x.products?.name} ${x.products?.sku} ${x.profiles?.name}`.toLowerCase().includes(q)));
-  $('#lg').innerHTML = r.length ? r.map(x => `<div class="q"><b>${x.type}</b> · ${esc(x.products?.name)} · ${x.qty ?? x.counted_qty} <span class="tag ${x.status}">${STAT[x.status]}</span>
-    <small>${esc(x.products?.sku)} · ${esc(x.profiles?.name || 'Staf')} · ${fmt(x.created_at)}</small>
+  $('#lg').innerHTML = r.length ? r.map(x => `<div class="q t-${x.type}"><div class="qh"><span class="chip">${ic(TI[x.type], 18)}</span><div><b>${x.type} · ${esc(x.products?.name)} · ${x.qty ?? x.counted_qty}</b>
+    <small>${esc(x.products?.sku)} · ${esc(x.profiles?.name || 'Staf')} · ${fmt(x.created_at)}</small></div><span class="tag ${x.status}">${STAT[x.status]}</span></div>
     ${x.approved_by ? `<small>${x.status === 'REJECTED' ? 'Ditolak' : 'Disetujui'} oleh ${esc(S.names[x.approved_by] || 'Admin')} · ${fmt(x.approved_at)}</small>` : ''}
     ${x.reject_reason ? `<small>Alasan: ${esc(x.reject_reason)}</small>` : ''}${x.note ? `<small>Catatan: ${esc(x.note)}</small>` : ''}</div>`).join('')
-    : '<p class="note">Tidak ada transaksi yang cocok.</p>';
+    : `<div class="empty">${ic('search', 32)}<br>Tidak ada transaksi yang cocok.</div>`;
 }
 
 // ---------- Barang ----------
@@ -179,9 +222,9 @@ async function prod() {
   const {data, error} = await sb.from('products').select('*').order('name');
   if (error) return fail(error);
   S.prods = data;
-  m.innerHTML = `<h2>Barang</h2><button class="fab" data-a="newp">+ Barang baru</button>` + (data.length ? data.map(p => `<button class="item ${p.is_active ? '' : 'off'}" data-a="editp" data-id="${p.id}">
+  m.innerHTML = head('package', 'Barang', `${data.length} barang terdaftar`) + `<button class="fab" data-a="newp">${ic('plus', 20)} Barang baru</button>` + (data.length ? data.map(p => `<button class="item ${p.is_active ? '' : 'off'}" data-a="editp" data-id="${p.id}">
     <div>${esc(p.name)}<small>${esc(p.sku)}${p.barcode ? ' · ' + esc(p.barcode) : ''}${p.is_active ? '' : ' · nonaktif'}</small></div>
-    <div class="stk ${p.ready_stock <= p.min_stock ? 'low' : ''}">${p.ready_stock}</div></button>`).join('') : '<p class="note">Belum ada barang. Tambahkan yang pertama.</p>');
+    <div class="stk ${p.ready_stock <= p.min_stock ? 'low' : ''}">${p.ready_stock}</div></button>`).join('') : `<div class="empty">${ic('package', 32)}<br>Belum ada barang. Tambahkan yang pertama.</div>`);
 }
 function prodForm(id) {
   const p = S.prods.find(x => x.id === id) || {unit:'pcs', min_stock:0, is_active:true}, ov = document.createElement('div'); ov.className = 'ov';
@@ -191,7 +234,7 @@ function prodForm(id) {
     <label>Batas stok minimum</label><input id="fm" type="number" inputmode="numeric" min="0" value="${p.min_stock}">
     <label class="chk"><input type="checkbox" id="fa" ${p.is_active ? 'checked' : ''}> Barang aktif</label>
     ${id ? `<p class="note">Stok saat ini ${p.ready_stock}. Stok hanya berubah lewat transaksi.</p>` : '<p class="note">Stok awal 0. Isi lewat transaksi Masuk di aplikasi staf.</p>'}
-    <button class="save" data-a="savep" data-id="${id || ''}">Simpan</button><button class="ghost" data-a="close">Batal</button></div>`;
+    <button class="save" data-a="savep" data-id="${id || ''}">${ic('check', 22)} Simpan</button><button class="ghost" data-a="close">Batal</button></div>`;
   document.body.append(ov);
 }
 async function saveP(id, btn) {
@@ -208,7 +251,7 @@ async function usr() {
   const m = $('#main'); m.innerHTML = SK;
   const {data, error} = await sb.from('profiles').select('id,name,role,is_active').order('name');
   if (error) return fail(error);
-  m.innerHTML = `<h2>Pengguna</h2><button class="fab" data-a="newu">+ Buat akun baru</button>` + data.map(u => {
+  m.innerHTML = head('users', 'Pengguna', `${data.length} akun`) + `<button class="fab" data-a="newu">${ic('plus', 20)} Buat akun baru</button>` + data.map(u => {
     const me = u.id === S.me.id;
     return `<div class="q"><b>${esc(u.name)}</b>${me ? ' <span class="tag">Anda</span>' : ''}<div class="row" style="margin-top:8px">
       <select data-a="role" data-id="${u.id}" ${me ? 'disabled' : ''} style="margin:0"><option value="STAF" ${u.role === 'STAF' ? 'selected' : ''}>Staf</option><option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>Admin</option></select>
@@ -224,7 +267,7 @@ function userForm() {
     <label>Kata sandi</label><input id="up" type="password" autocomplete="new-password">
     <label>Ulangi kata sandi</label><input id="up2" type="password" autocomplete="new-password">
     <label class="chk"><input type="checkbox" id="ua" checked> Jadikan Admin</label>
-    <p class="err" id="uerr"></p>
+    <p class="err" id="uerr" role="alert"></p>
     <button class="save" data-a="saveu">Buat akun</button><button class="ghost" data-a="close">Batal</button></div>`;
   document.body.append(ov);
 }
@@ -248,12 +291,12 @@ async function saveU(btn) {
 const go = () => ({dash, appr, log, prod, usr})[S.tab]();
 function bar() { const b = $('#nb'); if (b) { b.textContent = S.pending; b.hidden = !S.pending; } }
 function loginView(msg) {
-  $('#app').innerHTML = `<div class="login"><h2>Admin Stok Gudang</h2><label>Email</label><input id="em" type="email" autocomplete="username">
-  <label>Kata sandi</label><input id="pw" type="password" autocomplete="current-password"><p class="err" id="le">${esc(msg || '')}</p><button class="save" data-a="login">Masuk</button></div>`;
+  $('#app').innerHTML = `<div class="login"><div class="logo">${ic('appr', 28)}</div><h2>Admin Stok Gudang</h2><p class="sub">Masuk dengan akun Admin untuk mengelola stok.</p><label>Email</label><input id="em" type="email" autocomplete="username">
+  <label>Kata sandi</label><input id="pw" type="password" autocomplete="current-password"><p class="err" id="le" role="alert">${esc(msg || '')}</p><button class="save" data-a="login">Masuk</button></div>`;
 }
 function shell() {
-  $('#app').innerHTML = `<header><div><b>Admin Stok</b><small>${esc(S.me.name)}</small></div><button class="pill" data-a="out">Keluar</button></header><main id="main"></main>
-  <nav>${TABS.map(([k, l, i]) => `<button data-a="tab" data-k="${k}" class="${S.tab === k ? 'on' : ''}"><span>${i}</span>${l}${k === 'appr' ? '<i id="nb" hidden></i>' : ''}</button>`).join('')}</nav>`;
+  $('#app').innerHTML = `<header><div class="brand"><span class="logo">${ic('appr', 20)}</span><div>Admin Stok<small>${esc(S.me.name)}</small></div></div><button class="pill" data-a="out">${ic('logout', 16)} Keluar</button></header><main id="main"></main>
+  <nav>${TABS.map(([k, l, i]) => `<button data-a="tab" data-k="${k}" class="${S.tab === k ? 'on' : ''}"><span class="pl">${ic(i, 22)}${k === 'appr' ? '<i id="nb" hidden></i>' : ''}</span>${l}</button>`).join('')}</nav>`;
   let y0 = null; const m = $('#main');
   m.addEventListener('touchstart', e => { y0 = m.scrollTop === 0 ? e.touches[0].clientY : null; }, {passive:true});
   m.addEventListener('touchend', e => { if (y0 !== null && e.changedTouches[0].clientY - y0 > 90) { toast('Memperbarui…'); go(); } y0 = null; });
