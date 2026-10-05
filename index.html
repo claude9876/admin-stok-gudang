@@ -75,6 +75,9 @@ button{font:inherit;cursor:pointer}
 const SB_URL = 'https://xqvzbvdotavwmtybzsgc.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxdnpidmRvdGF2d210eWJ6c2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExNzY2MTgsImV4cCI6MjEwNjc1MjYxOH0.DpfcAV6CdFPaGoBBGAP-InZ-d_chsNTpVK1rf43YHtQ';
 const sb = supabase.createClient(SB_URL, SB_KEY);
+// Client kedua khusus untuk mendaftarkan akun baru dari dalam app admin.
+// Sengaja tidak menyimpan sesi, supaya proses signUp() tidak menggantikan sesi login admin yang sedang aktif.
+const sbReg = supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:false, autoRefreshToken:false}});
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const TABS = [['dash','Ringkasan','📊'],['appr','Approval','✅'],['log','Riwayat','🕘'],['prod','Barang','📦'],['usr','Pengguna','👥']];
@@ -205,12 +208,40 @@ async function usr() {
   const m = $('#main'); m.innerHTML = SK;
   const {data, error} = await sb.from('profiles').select('id,name,role,is_active').order('name');
   if (error) return fail(error);
-  m.innerHTML = `<h2>Pengguna</h2><p class="note">Akun baru dibuat di Supabase (Authentication → Users) dan muncul di sini sebagai Staf.</p>` + data.map(u => {
+  m.innerHTML = `<h2>Pengguna</h2><button class="fab" data-a="newu">+ Buat akun baru</button>` + data.map(u => {
     const me = u.id === S.me.id;
     return `<div class="q"><b>${esc(u.name)}</b>${me ? ' <span class="tag">Anda</span>' : ''}<div class="row" style="margin-top:8px">
       <select data-a="role" data-id="${u.id}" ${me ? 'disabled' : ''} style="margin:0"><option value="STAF" ${u.role === 'STAF' ? 'selected' : ''}>Staf</option><option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>Admin</option></select>
       <select data-a="act" data-id="${u.id}" ${me ? 'disabled' : ''} style="margin:0"><option value="1" ${u.is_active ? 'selected' : ''}>Aktif</option><option value="0" ${u.is_active ? '' : 'selected'}>Nonaktif</option></select></div></div>`;
   }).join('');
+}
+
+function userForm() {
+  const ov = document.createElement('div'); ov.className = 'ov';
+  ov.innerHTML = `<div class="sheet"><h2>Buat akun baru</h2>
+    <label>Nama</label><input id="un" type="text" autocomplete="name">
+    <label>Email</label><input id="ue" type="email" autocomplete="username">
+    <label>Kata sandi</label><input id="up" type="password" autocomplete="new-password">
+    <label>Ulangi kata sandi</label><input id="up2" type="password" autocomplete="new-password">
+    <label class="chk"><input type="checkbox" id="ua" checked> Jadikan Admin</label>
+    <p class="err" id="uerr"></p>
+    <button class="save" data-a="saveu">Buat akun</button><button class="ghost" data-a="close">Batal</button></div>`;
+  document.body.append(ov);
+}
+async function saveU(btn) {
+  $('#uerr').textContent = '';
+  const name = $('#un').value.trim(), email = $('#ue').value.trim(), pw = $('#up').value, pw2 = $('#up2').value, asAdmin = $('#ua').checked;
+  if (!name) return $('#uerr').textContent = 'Nama wajib diisi';
+  if (!email) return $('#uerr').textContent = 'Email wajib diisi';
+  if (pw.length < 6) return $('#uerr').textContent = 'Kata sandi minimal 6 karakter';
+  if (pw !== pw2) return $('#uerr').textContent = 'Kata sandi tidak sama';
+  const {data, error} = await sbReg.auth.signUp({email, password: pw, options:{data:{name}}});
+  if (error) return $('#uerr').textContent = /registered|exists/i.test(error.message) ? 'Email ini sudah terdaftar' : error.message;
+  if (asAdmin && data.user) {
+    const {error: e2} = await sb.from('profiles').update({role:'ADMIN'}).eq('id', data.user.id);
+    if (e2) { btn.closest('.ov').remove(); toast('Akun dibuat, tapi gagal set jadi Admin: ' + e2.message); usr(); return; }
+  }
+  btn.closest('.ov').remove(); toast('Akun dibuat' + (asAdmin ? ' sebagai Admin' : ' sebagai Staf')); usr();
 }
 
 // ---------- kerangka ----------
@@ -234,7 +265,8 @@ const act = {
   out() { sb.auth.signOut(); },
   tab(a) { S.tab = a.dataset.k; document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.k === S.tab)); go(); },
   reload: () => go(), ok: a => decide(a.dataset.id, true), no: a => decide(a.dataset.id, false),
-  newp: () => prodForm(null), editp: a => prodForm(a.dataset.id), savep: a => saveP(a.dataset.id, a), close: a => a.closest('.ov').remove()
+  newp: () => prodForm(null), editp: a => prodForm(a.dataset.id), savep: a => saveP(a.dataset.id, a), close: a => a.closest('.ov').remove(),
+  newu: () => userForm(), saveu: a => saveU(a)
 };
 document.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (a && act[a.dataset.a]) act[a.dataset.a](a); });
 document.addEventListener('change', async e => {
