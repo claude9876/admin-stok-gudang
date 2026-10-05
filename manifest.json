@@ -1,0 +1,33 @@
+{
+  "id": "/index.html",
+  "name": "Admin Stok Gudang",
+  "short_name": "Admin Stok",
+  "description": "Approval, riwayat, barang, dan pengguna",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "id",
+  "background_color": "#f5f6f2",
+  "theme_color": "#16211c",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
