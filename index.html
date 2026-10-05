@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16211c">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Admin Stok">
+<title>Admin Stok Gudang</title>
+<style>
+:root{--bg:#f5f6f2;--card:#fff;--ink:#16211c;--mut:#66726c;--line:#dfe3dc;--pri:#0b5d4f;--priS:#d9ece7;--bad:#b4350f;--badS:#fbe6dd;--warn:#8a5a00;--warnS:#fbf0d4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+#app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--ink);color:#fff}
+header small{display:block;opacity:.7;font-size:13px}
+.pill{border:0;border-radius:99px;padding:6px 14px;font:inherit;font-size:14px;background:rgba(255,255,255,.16);color:#fff}
+main{flex:1;overflow-y:auto;overscroll-behavior-y:contain;padding:16px}
+nav{display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{position:relative;border:0;background:none;padding:10px 0 8px;font:inherit;font-size:12.5px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px}
+nav button span{font-size:20px}
+nav button.on{color:var(--pri);font-weight:600;box-shadow:inset 0 3px var(--pri)}
+nav i{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font:600 11px/18px system-ui;font-style:normal;text-align:center;padding:0 4px}
+nav i[hidden]{display:none}
+h2{margin:0 0 12px;font-size:20px}h3{margin:20px 0 8px;font-size:16px}
+input,select{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);margin-bottom:10px}
+label{display:block;font-size:14px;color:var(--mut);margin:4px 0 6px}
+button{font:inherit;cursor:pointer}
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi b{display:block;font-size:28px;line-height:1.1}.kpi small{color:var(--mut)}
+.kpi .alert{background:var(--badS);border-color:var(--bad)}.kpi .alert b{color:var(--bad)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:110px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 10px 8px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.bars p{display:flex;gap:2px;align-items:flex-end;margin:0;height:74px}
+.bars s{display:block;width:9px;border-radius:3px 3px 0 0;background:var(--pri);min-height:2px}.bars s.o{background:#d9a21b}
+.bars small{font-size:11px;color:var(--mut)}
+.leg{font-size:13px;color:var(--mut);margin:6px 2px}.leg b{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--pri);margin:0 4px 0 0}.leg b.o{background:#d9a21b;margin-left:10px}
+.q{padding:14px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.q small{color:var(--mut);display:block}
+.q .eff{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--priS);font-weight:600}.q .eff.neg{background:var(--badS);color:var(--bad)}
+.q img{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin:6px 0;background:#e8ebe5}
+.row{display:flex;gap:8px}
+.ok,.no{flex:1;height:50px;border-radius:12px;font-weight:700;border:0}
+.ok{background:var(--pri);color:#fff}.ok:disabled{opacity:.4}.no{background:var(--badS);color:var(--bad)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--ink)}
+.tag.POSTED{background:var(--priS);color:var(--pri)}.tag.PENDING{background:var(--warnS);color:var(--warn)}.tag.REJECTED{background:var(--badS);color:var(--bad)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink)}
+.item small{display:block;color:var(--mut)}.item.off{opacity:.55}
+.stk{font-size:20px;font-weight:700;white-space:nowrap}.stk.low{color:var(--bad)}
+.save,.ghost{width:100%;height:52px;border-radius:12px;font-size:17px;font-weight:700;margin-top:6px;border:0}
+.save{background:var(--pri);color:#fff}.ghost{background:#fff;border:1px solid var(--line);font-weight:500}
+.fab{width:100%;height:50px;border:1px dashed var(--pri);background:var(--priS);color:var(--pri);border-radius:12px;font-weight:600;margin-bottom:12px}
+.chk{display:flex;gap:10px;align-items:center;color:var(--ink);font-size:16px;margin:0 0 12px}.chk input{width:22px;height:22px;margin:0}
+.sk{height:76px;margin-bottom:10px;border-radius:12px;background:linear-gradient(90deg,#e8ebe5 25%,#f3f5f0 50%,#e8ebe5 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.login{margin:auto;width:min(360px,100%);padding:24px}
+.err{color:var(--bad)}
+.toast{position:fixed;left:16px;right:16px;bottom:84px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;z-index:30}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;display:flex;align-items:flex-end}
+.sheet{background:var(--bg);width:100%;max-height:88dvh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.note{color:var(--mut);font-size:14px;margin:0 0 12px}
+@media(prefers-reduced-motion:reduce){.sk{animation:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL = 'https://xqvzbvdotavwmtybzsgc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxdnpidmRvdGF2d210eWJ6c2djIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExNzY2MTgsImV4cCI6MjEwNjc1MjYxOH0.DpfcAV6CdFPaGoBBGAP-InZ-d_chsNTpVK1rf43YHtQ';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TABS = [['dash','Ringkasan','📊'],['appr','Approval','✅'],['log','Riwayat','🕘'],['prod','Barang','📦'],['usr','Pengguna','👥']];
+const STAT = {PENDING:'Menunggu', POSTED:'Diterapkan', REJECTED:'Ditolak'};
+const S = {me:null, tab:'dash', pending:0, rows:[], names:{}, f:{type:'', status:'', q:''}, prods:[]};
+const SK = '<div class="sk"></div>'.repeat(4);
+const fmt = s => new Date(s).toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+const nice = m => /STOK_TIDAK_CUKUP/.test(m) ? 'Stok tidak cukup untuk menerapkan transaksi ini' : /TIDAK_PENDING/.test(m) ? 'Transaksi ini sudah diproses' : m;
+const one = x => [].concat(x || [])[0];
+let tt; const toast = m => { document.querySelectorAll('.toast').forEach(e => e.remove());
+  const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.append(d); clearTimeout(tt); tt = setTimeout(() => d.remove(), 3200); };
+const fail = e => { $('#main').innerHTML = `<p class="err">Gagal memuat: ${esc(e.message)}</p><button class="ghost" data-a="reload">Coba lagi</button>`; };
+
+// ---------- Ringkasan ----------
+async function dash() {
+  const m = $('#main'); m.innerHTML = SK;
+  const since = new Date(Date.now() - 6 * 864e5); since.setHours(0, 0, 0, 0);
+  const [p, t, pe] = await Promise.all([
+    sb.from('products').select('id,sku,name,unit,ready_stock,min_stock').eq('is_active', true),
+    sb.from('transactions').select('created_at,type,qty').eq('status', 'POSTED').gte('created_at', since.toISOString()),
+    sb.from('transactions').select('id', {count:'exact', head:true}).eq('status', 'PENDING')]);
+  if (p.error) return fail(p.error); if (t.error) return fail(t.error);
+  S.pending = pe.count || 0; bar();
+  const total = p.data.reduce((a, x) => a + x.ready_stock, 0);
+  const low = p.data.filter(x => x.ready_stock <= x.min_stock).sort((a, b) => a.ready_stock - b.ready_stock);
+  const days = [...Array(7)].map((_, i) => { const d = new Date(since); d.setDate(d.getDate() + i); return {d, in:0, out:0}; });
+  t.data.forEach(r => { const x = days.find(y => y.d.toDateString() === new Date(r.created_at).toDateString());
+    if (x && r.type === 'MASUK') x.in += r.qty; if (x && r.type === 'KELUAR') x.out += r.qty; });
+  const mx = Math.max(1, ...days.flatMap(x => [x.in, x.out]));
+  m.innerHTML = `<h2>Ringkasan</h2><div class="kpi">
+    <div><b>${total}</b><small>Total unit di gudang</small></div><div><b>${p.data.length}</b><small>SKU aktif</small></div>
+    <div class="${low.length ? 'alert' : ''}"><b>${low.length}</b><small>Stok menipis</small></div>
+    <div class="${S.pending ? 'alert' : ''}"><b>${S.pending}</b><small>Menunggu approval</small></div></div>
+    <h3>7 hari terakhir (unit)</h3><div class="bars">${days.map(x => `<div><p><s style="height:${x.in / mx * 70}px"></s><s class="o" style="height:${x.out / mx * 70}px"></s></p><small>${x.d.toLocaleDateString('id-ID', {weekday:'short'})}</small></div>`).join('')}</div>
+    <div class="leg"><b></b>Masuk<b class="o"></b>Keluar</div>
+    <h3>Perlu diisi ulang</h3>${low.length ? low.slice(0, 8).map(x => `<div class="item"><div>${esc(x.name)}<small>${esc(x.sku)} · batas ${x.min_stock}</small></div><div class="stk low">${x.ready_stock}</div></div>`).join('') : '<p class="note">Semua stok di atas batas minimum.</p>'}`;
+}
+
+// ---------- Approval ----------
+async function appr() {
+  const m = $('#main'); m.innerHTML = SK;
+  const {data, error} = await sb.from('transactions').select('*,products(name,sku,unit,ready_stock),profiles!transactions_user_id_fkey(name),returns(photo_path,reason,layak_jual)').eq('status', 'PENDING').order('created_at');
+  if (error) return fail(error);
+  S.pending = data.length; bar();
+  if (!data.length) { m.innerHTML = '<h2>Approval</h2><p class="note">Tidak ada retur atau opname yang menunggu.</p>'; return; }
+  const paths = [];
+  m.innerHTML = '<h2>Approval</h2>' + data.map(t => {
+    const r = one(t.returns), pr = t.products, now = pr.ready_stock;
+    const delta = t.type === 'RETUR' ? (r && r.layak_jual ? t.qty : 0) : t.counted_qty - t.system_qty, after = now + delta;
+    if (r && r.photo_path) paths.push(r.photo_path);
+    const det = t.type === 'RETUR'
+      ? `${t.qty} ${esc(pr.unit)} · ${esc(r?.reason || '-')} · ${r?.layak_jual ? 'layak dijual kembali' : 'tidak layak jual (stok tidak bertambah)'}`
+      : `Hitung fisik ${t.counted_qty}, stok sistem saat dihitung ${t.system_qty} (selisih ${t.counted_qty - t.system_qty >= 0 ? '+' : ''}${t.counted_qty - t.system_qty})`;
+    return `<div class="q"><b>${t.type} · ${esc(pr.name)}</b><small>${esc(pr.sku)} · ${esc(t.profiles?.name || 'Staf')} · ${fmt(t.created_at)}</small>
+      <p style="margin:8px 0 0">${det}</p>${t.note ? `<small>Catatan: ${esc(t.note)}</small>` : ''}
+      ${r && r.photo_path ? `<img data-p="${esc(r.photo_path)}" alt="Foto bukti retur">` : ''}
+      <div class="eff ${after < 0 ? 'neg' : ''}">Stok sekarang ${now} → ${after} ${esc(pr.unit)}</div>
+      <div class="row"><button class="no" data-a="no" data-id="${t.id}">Tolak</button><button class="ok" data-a="ok" data-id="${t.id}" ${after < 0 ? 'disabled' : ''}>Setujui</button></div></div>`;
+  }).join('');
+  if (paths.length) { const {data: u} = await sb.storage.from('retur-photos').createSignedUrls(paths, 600);
+    (u || []).forEach(x => { const i = document.querySelector(`img[data-p="${CSS.escape(x.path)}"]`); if (i && x.signedUrl) i.src = x.signedUrl; }); }
+}
+async function decide(id, ok) {
+  let reason = null;
+  if (!ok) { reason = (prompt('Alasan penolakan (wajib):') || '').trim(); if (!reason) return toast('Alasan penolakan wajib diisi'); }
+  const {error} = await sb.rpc('approve_transaction', {p_id:id, p_approve:ok, p_reason:reason});
+  if (error) toast(nice(error.message)); else toast(ok ? 'Disetujui, stok diperbarui' : 'Ditolak');
+  go();
+}
+
+// ---------- Riwayat ----------
+async function log() {
+  const m = $('#main'); m.innerHTML = SK;
+  const [t, p] = await Promise.all([
+    sb.from('transactions').select('id,type,qty,counted_qty,system_qty,status,created_at,approved_by,approved_at,reject_reason,note,products(name,sku),profiles!transactions_user_id_fkey(name)').order('created_at', {ascending:false}).limit(200),
+    sb.from('profiles').select('id,name')]);
+  if (t.error) return fail(t.error);
+  S.rows = t.data; S.names = Object.fromEntries((p.data || []).map(x => [x.id, x.name]));
+  const o = (v, a) => a.map(([k, l]) => `<option value="${k}" ${S.f[v] === k ? 'selected' : ''}>${l}</option>`).join('');
+  m.innerHTML = `<h2>Riwayat</h2><select id="lt">${o('type', [['', 'Semua jenis'], ['MASUK', 'Masuk'], ['KELUAR', 'Keluar'], ['RETUR', 'Retur'], ['OPNAME', 'Opname']])}</select>
+    <select id="ls">${o('status', [['', 'Semua status'], ['PENDING', 'Menunggu'], ['POSTED', 'Diterapkan'], ['REJECTED', 'Ditolak']])}</select>
+    <input id="lq" placeholder="Cari barang, SKU, atau staf" value="${esc(S.f.q)}"><div id="lg"></div>`;
+  logList();
+}
+function logList() {
+  const q = S.f.q.toLowerCase();
+  const r = S.rows.filter(x => (!S.f.type || x.type === S.f.type) && (!S.f.status || x.status === S.f.status)
+    && (!q || `${x.products?.name} ${x.products?.sku} ${x.profiles?.name}`.toLowerCase().includes(q)));
+  $('#lg').innerHTML = r.length ? r.map(x => `<div class="q"><b>${x.type}</b> · ${esc(x.products?.name)} · ${x.qty ?? x.counted_qty} <span class="tag ${x.status}">${STAT[x.status]}</span>
+    <small>${esc(x.products?.sku)} · ${esc(x.profiles?.name || 'Staf')} · ${fmt(x.created_at)}</small>
+    ${x.approved_by ? `<small>${x.status === 'REJECTED' ? 'Ditolak' : 'Disetujui'} oleh ${esc(S.names[x.approved_by] || 'Admin')} · ${fmt(x.approved_at)}</small>` : ''}
+    ${x.reject_reason ? `<small>Alasan: ${esc(x.reject_reason)}</small>` : ''}${x.note ? `<small>Catatan: ${esc(x.note)}</small>` : ''}</div>`).join('')
+    : '<p class="note">Tidak ada transaksi yang cocok.</p>';
+}
+
+// ---------- Barang ----------
+async function prod() {
+  const m = $('#main'); m.innerHTML = SK;
+  const {data, error} = await sb.from('products').select('*').order('name');
+  if (error) return fail(error);
+  S.prods = data;
+  m.innerHTML = `<h2>Barang</h2><button class="fab" data-a="newp">+ Barang baru</button>` + (data.length ? data.map(p => `<button class="item ${p.is_active ? '' : 'off'}" data-a="editp" data-id="${p.id}">
+    <div>${esc(p.name)}<small>${esc(p.sku)}${p.barcode ? ' · ' + esc(p.barcode) : ''}${p.is_active ? '' : ' · nonaktif'}</small></div>
+    <div class="stk ${p.ready_stock <= p.min_stock ? 'low' : ''}">${p.ready_stock}</div></button>`).join('') : '<p class="note">Belum ada barang. Tambahkan yang pertama.</p>');
+}
+function prodForm(id) {
+  const p = S.prods.find(x => x.id === id) || {unit:'pcs', min_stock:0, is_active:true}, ov = document.createElement('div'); ov.className = 'ov';
+  ov.innerHTML = `<div class="sheet"><h2>${id ? 'Ubah barang' : 'Barang baru'}</h2>
+    <label>SKU</label><input id="fs" value="${esc(p.sku)}"><label>Nama barang</label><input id="fn" value="${esc(p.name)}">
+    <label>Barcode (opsional)</label><input id="fb" value="${esc(p.barcode)}"><label>Satuan</label><input id="fu" value="${esc(p.unit)}">
+    <label>Batas stok minimum</label><input id="fm" type="number" inputmode="numeric" min="0" value="${p.min_stock}">
+    <label class="chk"><input type="checkbox" id="fa" ${p.is_active ? 'checked' : ''}> Barang aktif</label>
+    ${id ? `<p class="note">Stok saat ini ${p.ready_stock}. Stok hanya berubah lewat transaksi.</p>` : '<p class="note">Stok awal 0. Isi lewat transaksi Masuk di aplikasi staf.</p>'}
+    <button class="save" data-a="savep" data-id="${id || ''}">Simpan</button><button class="ghost" data-a="close">Batal</button></div>`;
+  document.body.append(ov);
+}
+async function saveP(id, btn) {
+  const v = {sku:$('#fs').value.trim(), name:$('#fn').value.trim(), barcode:$('#fb').value.trim() || null, unit:$('#fu').value.trim() || 'pcs',
+    min_stock:parseInt($('#fm').value, 10) || 0, is_active:$('#fa').checked};
+  if (!v.sku || !v.name) return toast('SKU dan nama wajib diisi');
+  const {error} = id ? await sb.from('products').update(v).eq('id', id) : await sb.from('products').insert(v);
+  if (error) return toast(error.code === '23505' ? 'SKU atau barcode sudah dipakai barang lain' : error.message);
+  btn.closest('.ov').remove(); toast('Barang disimpan'); prod();
+}
+
+// ---------- Pengguna ----------
+async function usr() {
+  const m = $('#main'); m.innerHTML = SK;
+  const {data, error} = await sb.from('profiles').select('id,name,role,is_active').order('name');
+  if (error) return fail(error);
+  m.innerHTML = `<h2>Pengguna</h2><p class="note">Akun baru dibuat di Supabase (Authentication → Users) dan muncul di sini sebagai Staf.</p>` + data.map(u => {
+    const me = u.id === S.me.id;
+    return `<div class="q"><b>${esc(u.name)}</b>${me ? ' <span class="tag">Anda</span>' : ''}<div class="row" style="margin-top:8px">
+      <select data-a="role" data-id="${u.id}" ${me ? 'disabled' : ''} style="margin:0"><option value="STAF" ${u.role === 'STAF' ? 'selected' : ''}>Staf</option><option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>Admin</option></select>
+      <select data-a="act" data-id="${u.id}" ${me ? 'disabled' : ''} style="margin:0"><option value="1" ${u.is_active ? 'selected' : ''}>Aktif</option><option value="0" ${u.is_active ? '' : 'selected'}>Nonaktif</option></select></div></div>`;
+  }).join('');
+}
+
+// ---------- kerangka ----------
+const go = () => ({dash, appr, log, prod, usr})[S.tab]();
+function bar() { const b = $('#nb'); if (b) { b.textContent = S.pending; b.hidden = !S.pending; } }
+function loginView(msg) {
+  $('#app').innerHTML = `<div class="login"><h2>Admin Stok Gudang</h2><label>Email</label><input id="em" type="email" autocomplete="username">
+  <label>Kata sandi</label><input id="pw" type="password" autocomplete="current-password"><p class="err" id="le">${esc(msg || '')}</p><button class="save" data-a="login">Masuk</button></div>`;
+}
+function shell() {
+  $('#app').innerHTML = `<header><div><b>Admin Stok</b><small>${esc(S.me.name)}</small></div><button class="pill" data-a="out">Keluar</button></header><main id="main"></main>
+  <nav>${TABS.map(([k, l, i]) => `<button data-a="tab" data-k="${k}" class="${S.tab === k ? 'on' : ''}"><span>${i}</span>${l}${k === 'appr' ? '<i id="nb" hidden></i>' : ''}</button>`).join('')}</nav>`;
+  let y0 = null; const m = $('#main');
+  m.addEventListener('touchstart', e => { y0 = m.scrollTop === 0 ? e.touches[0].clientY : null; }, {passive:true});
+  m.addEventListener('touchend', e => { if (y0 !== null && e.changedTouches[0].clientY - y0 > 90) { toast('Memperbarui…'); go(); } y0 = null; });
+  go();
+}
+const act = {
+  async login() { $('#le').textContent = ''; const {error} = await sb.auth.signInWithPassword({email:$('#em').value.trim(), password:$('#pw').value});
+    if (error) $('#le').textContent = 'Email atau kata sandi salah'; },
+  out() { sb.auth.signOut(); },
+  tab(a) { S.tab = a.dataset.k; document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.k === S.tab)); go(); },
+  reload: () => go(), ok: a => decide(a.dataset.id, true), no: a => decide(a.dataset.id, false),
+  newp: () => prodForm(null), editp: a => prodForm(a.dataset.id), savep: a => saveP(a.dataset.id, a), close: a => a.closest('.ov').remove()
+};
+document.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (a && act[a.dataset.a]) act[a.dataset.a](a); });
+document.addEventListener('change', async e => {
+  const a = e.target.dataset.a; if (a !== 'role' && a !== 'act') return;
+  const {error} = await sb.from('profiles').update(a === 'role' ? {role:e.target.value} : {is_active:e.target.value === '1'}).eq('id', e.target.dataset.id);
+  toast(error ? error.message : 'Pengguna diperbarui');
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'lt') S.f.type = e.target.value; if (e.target.id === 'ls') S.f.status = e.target.value; if (e.target.id === 'lq') S.f.q = e.target.value;
+  if (['lt', 'ls', 'lq'].includes(e.target.id)) logList();
+});
+
+async function enter(user) {
+  const {data: pf} = await sb.from('profiles').select('name,role,is_active').eq('id', user.id).maybeSingle();
+  if (!pf || pf.role !== 'ADMIN' || !pf.is_active) { await sb.auth.signOut(); loginView('Akun ini bukan Admin aktif. Gunakan aplikasi staf.'); return; }
+  S.me = {id:user.id, name:pf.name || user.email}; shell();
+  let d; const again = () => { clearTimeout(d); d = setTimeout(() => { if (['dash', 'appr'].includes(S.tab) && !document.querySelector('.ov')) go(); }, 800); };
+  sb.channel('adm').on('postgres_changes', {event:'*', schema:'public', table:'transactions'}, again).on('postgres_changes', {event:'*', schema:'public', table:'products'}, again).subscribe();
+}
+sb.auth.onAuthStateChange((ev, ses) => {
+  if (ev === 'SIGNED_OUT') { S.me = null; sb.removeAllChannels(); loginView(); }
+  else if (ses && !S.me) setTimeout(() => enter(ses.user), 0);
+});
+sb.auth.getSession().then(({data}) => { if (!data.session) loginView(); });
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
